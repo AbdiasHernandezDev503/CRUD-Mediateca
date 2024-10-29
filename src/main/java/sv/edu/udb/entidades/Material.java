@@ -5,8 +5,12 @@ public class Material {
     private String titulo;
     private String tipo;
 
-    public Material () {
+    public Material() {
 
+    }
+
+    public Material (String titulo) {
+        this.titulo = titulo;
     }
 
     public Material(String codigoId, String titulo, String tipo) {

@@ -12,8 +12,15 @@ public class Revista extends Material {
 
     }
 
-    public Revista(String codigoId, String titulo, String tipo, String editorial, String periodicidad, Date fechaPublicacion, int stock) {
-        super(codigoId, titulo, tipo);
+    public Revista(String titulo, String editorial, String periodicidad, Date fechaPublicacion, int stock) {
+        super(titulo);
+        this.editorial = editorial;
+        this.periodicidad = periodicidad;
+        this.fechaPublicacion = fechaPublicacion;
+        this.stock = stock;
+    }
+
+    public Revista(String editorial, String periodicidad, Date fechaPublicacion, int stock) {
         this.editorial = editorial;
         this.periodicidad = periodicidad;
         this.fechaPublicacion = fechaPublicacion;
