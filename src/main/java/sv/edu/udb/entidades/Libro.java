@@ -18,6 +18,10 @@ public class Libro extends Material {
         this.stock = stock;
     }
 
+    public Libro() {
+
+    }
+
     public String getAutor() {
         return autor;
     }
