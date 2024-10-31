@@ -126,8 +126,54 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
 
         return result;
     }
-
     public int eliminar(String codigoId) throws Exception {
+        int result = 0;
+        String sql;
+        log.info("Iniciando eliminación del libro con codigo_ID: {}", codigoId);
+
+        try (Connection conexion = Conexion.obtenerConexion()) {
+            conexion.setAutoCommit(false);  // Inicia la transacción
+            log.debug("Conexión obtenida y auto-commit desactivado");
+
+            sql = "DELETE FROM Libro WHERE codigo_ID = ?";
+            try (PreparedStatement ps = Conexion.createPreparedStatement(conexion, sql)) {
+                ps.setString(1, codigoId);
+                result = ps.executeUpdate();
+                log.info("Resultado de eliminación en Libro: {}", result);
+
+                if (result > 0) {
+                    String sqlDeleteMaterial = "DELETE FROM Material WHERE codigo_ID = ?";
+                    try (PreparedStatement psMaterial = conexion.prepareStatement(sqlDeleteMaterial)) {
+                        psMaterial.setString(1, codigoId);
+                        int resultMaterial = psMaterial.executeUpdate();
+                        log.info("Resultado de eliminación en Material: {}", resultMaterial);
+
+                        if (resultMaterial > 0) {
+                            conexion.commit();  // Confirma la transacción solo si ambas eliminaciones son exitosas
+                            log.info("Eliminación completada en ambas tablas y commit realizado");
+                        } else {
+                            conexion.rollback();  // Revierte si la segunda eliminación falla
+                            log.warn("No se pudo eliminar el registro en Material. Transacción revertida");
+                        }
+                    }
+                } else {
+                    log.warn("No se encontró el registro en Libro. Transacción revertida");
+                    conexion.rollback();  // Revierte si no existe el registro en Libro
+                }
+            } catch (SQLException e) {
+                conexion.rollback();  // Revierte la transacción en caso de error
+                log.error("Ocurrió un error al borrar los datos en Libro: ", e);
+            }
+        } catch (SQLException e) {
+            log.error("Ocurrió un error inesperado al conectar a la base de datos: ", e);
+        }
+
+        return result;
+    }
+
+
+
+  /*  public int eliminar(String codigoId) throws Exception {
         int result = 0;
         String sql;
 
@@ -154,7 +200,7 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
         }
 
         return result;
-    }
+    }*/
 
     public List<Libro> listar() throws Exception {
         List<Libro> libros = new ArrayList<>();
