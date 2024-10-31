@@ -1,13 +1,16 @@
 package sv.edu.udb;
 
 import sv.edu.udb.dao.Conexion;
+import sv.edu.udb.dao.DvdDAO;
 import sv.edu.udb.dao.LibroDAO;
 import sv.edu.udb.dao.RevistaDAO;
+import sv.edu.udb.entidades.Dvd;
 import sv.edu.udb.entidades.Libro;
 import sv.edu.udb.entidades.Revista;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -16,9 +19,51 @@ import org.apache.logging.log4j.Logger;
 public class Main {
     public static void main(String[] args) {
   final  Logger log = LogManager.getLogger(Main.class);
-        log.info("Prueba en consola");
 
-        RevistaDAO revistaDAO = new RevistaDAO();
+        DvdDAO dvdDAO = new DvdDAO();
+        /*Dvd dvd = new Dvd("Anaconda 4: Rastro de Sangre", "Stephen Spilberg", LocalTime.of(1, 30), "Suspenso", 20);
+
+        try {
+            dvdDAO.crear(dvd);
+            System.out.println("Inserción completada en la base de datos.");
+        } catch (Exception e) {
+            System.out.println("Error al insertar la revista.");
+            e.printStackTrace();
+        }
+        log.info("Prueba en consola");*/
+
+        /*RevistaDAO revistaDAO = new RevistaDAO();
+        LibroDAO libroDAO = new LibroDAO();*/
+        //DvdDAO dvdDAO = new DvdDAO();
+
+        try {
+            List<Dvd> dvds = dvdDAO.listar();
+            for (Dvd dvd : dvds) {
+                System.out.println("Código: " + dvd.getCodigoId());
+                System.out.println("titulo: " + dvd.getTitulo());
+                System.out.println("Director: " + dvd.getDirector());
+                System.out.println("Genero: " + dvd.getGenero());
+                System.out.println("Duracion: " + dvd.getDuracion());
+                System.out.println("Stock: " + dvd.getStock());
+                System.out.println("---------------------------------");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /*String codigoID = "LIB00002";
+
+        try {
+            int result = libroDAO.eliminar(codigoID);
+            if (result > 0) {
+                System.out.println("Eliminación completada.");
+            } else {
+                System.out.println("No se encontró el registro o no se pudo eliminar.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al eliminar la revista.");
+            e.printStackTrace();
+        }*/
 
         /*     METODO DE LISTAR LOS RESULTADOS OBTENIDOS
         try {
@@ -126,15 +171,6 @@ try {
     System.out.println("Error al actualizar el libro.");
     e.printStackTrace();
 }*/
-        try {
-        LibroDAO libroDAO = new LibroDAO();
-        int result = libroDAO.eliminar("LIB00001");
-
-        } catch (Exception e) {
-            log.error("Error al insertar material: ", e);
-            log.error("Ocurrio elsiguiente error: ", e.getMessage());
-        }
-
 
        // ELIMINAR REGISTRO DE LA TABLA
       /*  LibroDAO libroDAO = new LibroDAO();

@@ -12,8 +12,8 @@ public class Dvd extends Material {
 
     }
 
-    public Dvd(String codigoId, String titulo, String tipo, String director, LocalTime duracion, String genero, int stock) {
-        super(codigoId, titulo, tipo);
+    public Dvd(String titulo, String director, LocalTime duracion, String genero, int stock) {
+        super(titulo);
         this.director = director;
         this.duracion = duracion;
         this.genero = genero;
