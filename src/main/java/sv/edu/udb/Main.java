@@ -1,13 +1,16 @@
 package sv.edu.udb;
 
+import sv.edu.udb.dao.CdAudioDAO;
 import sv.edu.udb.dao.Conexion;
 import sv.edu.udb.dao.LibroDAO;
 import sv.edu.udb.dao.RevistaDAO;
+import sv.edu.udb.entidades.CdAudio;
 import sv.edu.udb.entidades.Libro;
 import sv.edu.udb.entidades.Revista;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -126,14 +129,6 @@ try {
     System.out.println("Error al actualizar el libro.");
     e.printStackTrace();
 }*/
-        try {
-        LibroDAO libroDAO = new LibroDAO();
-        int result = libroDAO.eliminar("LIB00001");
-
-        } catch (Exception e) {
-            log.error("Error al insertar material: ", e);
-            log.error("Ocurrio elsiguiente error: ", e.getMessage());
-        }
 
 
        // ELIMINAR REGISTRO DE LA TABLA
@@ -151,5 +146,19 @@ try {
             System.out.println("Error al eliminar el libro.");
             e.printStackTrace();
         }*/
+         //CREAR REGISTRO EN LA TABLA
+       /* CdAudioDAO cdAudioDAO = new CdAudioDAO();
+
+       CdAudio cdAudio = new CdAudio( "Cd testing 2", "CD_Audio", "Various Artists", LocalTime.of(1, 20, 0), 23, 50);
+
+        try {
+            cdAudioDAO.crear(cdAudio);
+            System.out.println("Inserción completada en la base de datos.");
+        } catch (Exception e) {
+            System.out.println("Error al insertar el CD_Audio.");
+            e.printStackTrace();
+        }*/
+
+
     }
 }

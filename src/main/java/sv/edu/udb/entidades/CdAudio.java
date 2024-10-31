@@ -13,14 +13,16 @@ public class CdAudio extends Material {
 
     }
 
-    public CdAudio(String codigoId, String titulo, String tipo, String artista, String genero, LocalTime duracion, int canciones, int stock) {
-        super(codigoId, titulo, tipo);
+    public CdAudio(String titulo,  String artista, String genero, LocalTime duracion, int canciones, int stock) {
+        super( titulo);
         this.artista = artista;
         this.genero = genero;
         this.duracion = duracion;
         this.canciones = canciones;
         this.stock = stock;
     }
+
+
 
     public String getArtista() {
         return artista;
