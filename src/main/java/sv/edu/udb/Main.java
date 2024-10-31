@@ -1,17 +1,22 @@
 package sv.edu.udb;
 
 import sv.edu.udb.dao.Conexion;
+import sv.edu.udb.dao.LibroDAO;
 import sv.edu.udb.dao.RevistaDAO;
+import sv.edu.udb.entidades.Libro;
 import sv.edu.udb.entidades.Revista;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Main {
     public static void main(String[] args) {
-
+  final  Logger log = LogManager.getLogger(Main.class);
+        log.info("Prueba en consola");
 
         RevistaDAO revistaDAO = new RevistaDAO();
 
@@ -31,9 +36,9 @@ public class Main {
         }
         */
 
-        /*    METODO PARA MODIFICAR LOS REGISTROS
+      //      METODO PARA MODIFICAR LOS REGISTROS
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+     /*   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date fechaPublicacion = null;
         try {
             fechaPublicacion = sdf.parse("2023-01-01");
@@ -54,10 +59,10 @@ public class Main {
             System.out.println("Error al actualizar la revista.");
             e.printStackTrace();
         }
-         */
+*/
 
-        /*     ELIMINAR REGISTRO DE LA TABLA
-        try {
+            // ELIMINAR REGISTRO DE LA TABLA
+   /*     try {
             int result = revistaDAO.eliminar(codigoID);
             if (result > 0) {
                 System.out.println("Eliminación completada.");
@@ -67,11 +72,11 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Error al eliminar la revista.");
             e.printStackTrace();
-        } */
+        }*/
 
-        /*        CREAR REGISTRO EN LA TABLA
+        //CREAR REGISTRO EN LA TABLA
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      /*  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date fechaPublicacion = null;
         try {
             fechaPublicacion = sdf.parse("2023-01-01");
@@ -87,6 +92,64 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Error al insertar la revista.");
             e.printStackTrace();
-        } */
+        }*/
+
+        //CREAR REGISTRO EN LA TABLA
+
+/*
+        LibroDAO libroDAO = new LibroDAO();
+
+        Libro libro = new Libro("LIB00001", "El Quijote", "Libro", "Miguel de Cervantes", 500, "Editorial X", "1234567890", 1605, 10);
+
+        try {
+            libroDAO.crear(libro);
+            System.out.println("Inserción completada en la base de datos.");
+        } catch (Exception e) {
+            System.out.println("Error al insertar el libro.");
+            e.printStackTrace();
+        }*/
+
+        //   METODO PARA MODIFICAR LOS REGISTROS
+/*
+LibroDAO libroDAO = new LibroDAO();
+
+Libro libro = new Libro("LIB00001", "EL principito", "Libro", "Miguel de Cervantes", 500, "Editorial X", "1234567890", 1605, 10);
+
+try {
+    int result = libroDAO.modificar(libro);
+    if (result > 0) {
+        System.out.println("Actualización completada en la base de datos.");
+    } else {
+        System.out.println("No se encontró el registro o no se pudo actualizar.");
+    }
+} catch (Exception e) {
+    System.out.println("Error al actualizar el libro.");
+    e.printStackTrace();
+}*/
+        try {
+        LibroDAO libroDAO = new LibroDAO();
+        int result = libroDAO.eliminar("LIB00001");
+
+        } catch (Exception e) {
+            log.error("Error al insertar material: ", e);
+            log.error("Ocurrio elsiguiente error: ", e.getMessage());
+        }
+
+
+       // ELIMINAR REGISTRO DE LA TABLA
+      /*  LibroDAO libroDAO = new LibroDAO();
+        String codigoID = "LIB00001"; // Replace with the actual ID of the book you want to delete
+
+        try {
+            int result = libroDAO.eliminar(codigoID);
+            if (result > 0) {
+                System.out.println("Eliminación completada.");
+            } else {
+                System.out.println("No se encontró el registro o no se pudo eliminar.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al eliminar el libro.");
+            e.printStackTrace();
+        }*/
     }
 }
