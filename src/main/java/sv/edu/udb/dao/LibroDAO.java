@@ -171,41 +171,12 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
         return result;
     }
 
-
-
-  /*  public int eliminar(String codigoId) throws Exception {
-        int result = 0;
-        String sql;
-
-        try (Connection conexion = Conexion.obtenerConexion()) {
-            sql = "DELETE FROM Libro WHERE codigo_ID = ?";
-
-            try (PreparedStatement ps = Conexion.createPreparedStatement(conexion, sql)) {
-                ps.setString(1, codigoId);
-                result = ps.executeUpdate();
-
-                if (result > 0) {
-                    String sqlDeleteMaterial = "DELETE FROM Material WHERE codigo_ID = ?";
-                    try (PreparedStatement psMaterial = conexion.prepareStatement(sqlDeleteMaterial)) {
-                        psMaterial.setString(1, codigoId);
-                        result = psMaterial.executeUpdate();
-                    }
-                }
-
-            } catch (SQLException e) {
-                log.error("Ocurrió un error al borrar los datos: ", e);
-            }
-        } catch (SQLException e) {
-            log.error("Ocurrió un error inesperado: ", e);
-        }
-
-        return result;
-    }*/
-
     public List<Libro> listar() throws Exception {
         List<Libro> libros = new ArrayList<>();
 
-        String sql = "SELECT codigo_ID, autor, paginas, editorial, isbn, anio_publicacion, stock FROM Libro";
+        String sql = "SELECT l.codigo_ID, m.titulo, l.autor, l.paginas, l.editorial, l.isbn, l.anio_publicacion, l.stock" +
+                " FROM Libro l " +
+                "JOIN Material m ON l.codigo_ID = m.codigo_ID";
 
         try (Connection connection = Conexion.obtenerConexion();
              PreparedStatement ps = connection.prepareStatement(sql);
@@ -214,6 +185,7 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
             while (rs.next()) {
                 Libro libro = new Libro();
                 libro.setCodigoId(rs.getString("codigo_ID"));
+                libro.setTitulo(rs.getString("titulo"));
                 libro.setAutor(rs.getString("autor"));
                 libro.setPaginas(rs.getInt("paginas"));
                 libro.setEditorial(rs.getString("editorial"));
@@ -222,6 +194,7 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
                 libro.setStock(rs.getInt("stock"));
 
                 libros.add(libro);
+
             }
         } catch (SQLException e) {
             log.error("Ocurrió un error al listar los libros: ", e);
