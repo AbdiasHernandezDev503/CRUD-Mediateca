@@ -33,7 +33,7 @@ public class FrmGestionLibros extends javax.swing.JFrame {
         btnEliminar.setEnabled(tbLibros.getSelectedRow() != -1);
         btnModificar.setEnabled(tbLibros.getSelectedRow() != -1);
         setResizable(false);
-        cargarLibros();
+        cargarLibros(); 
     }
     
     public void cargarLibros() {
