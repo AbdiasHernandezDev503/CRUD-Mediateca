@@ -2,6 +2,8 @@ package sv.edu.udb.vistas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LibroForm extends JFrame {
 
@@ -18,9 +20,6 @@ public class LibroForm extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-
-        JLabel lblCodigoID = new JLabel("Código ID:");
-        JTextField txtCodigoID = new JTextField(15);
 
         JLabel lblTitulo = new JLabel("Título:");
         JTextField txtTitulo = new JTextField(15);
@@ -44,70 +43,77 @@ public class LibroForm extends JFrame {
         JTextField txtStock = new JTextField(15);
 
         JButton btnGuardar = new JButton("Guardar");
-
+        JButton btnSalir = new JButton("Salir");
 
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(lblCodigoID, gbc);
-        gbc.gridx = 1;
-        add(txtCodigoID, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
         add(lblTitulo, gbc);
         gbc.gridx = 1;
         add(txtTitulo, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 1;
         add(lblAutor, gbc);
         gbc.gridx = 1;
         add(txtAutor, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         add(lblPaginas, gbc);
         gbc.gridx = 1;
         add(txtPaginas, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         add(lblEditorial, gbc);
         gbc.gridx = 1;
         add(txtEditorial, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         add(lblISBN, gbc);
         gbc.gridx = 1;
         add(txtISBN, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 5;
         add(lblAnioPublicacion, gbc);
         gbc.gridx = 1;
         add(txtAnioPublicacion, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 6;
         add(lblStock, gbc);
         gbc.gridx = 1;
         add(txtStock, gbc);
 
-
+        //Espacio en blanco
         gbc.gridx = 0;
-        gbc.gridy = 8;
+        gbc.gridy = 7;
         gbc.weighty = 0;
         add(new JLabel(), gbc);
 
 
+      
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        panelBotones.add(btnGuardar);
+        panelBotones.add(btnSalir);
+
         gbc.gridx = 0;
-        gbc.gridy = 9;
+        gbc.gridy = 8;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weighty = 0;
-        add(btnGuardar, gbc);
+        add(panelBotones, gbc);
+
+
+        btnSalir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
 
 
         setVisible(true);
@@ -118,5 +124,6 @@ public class LibroForm extends JFrame {
         SwingUtilities.invokeLater(() -> new LibroForm());
     }
 }
+
 
 
