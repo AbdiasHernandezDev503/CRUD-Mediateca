@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LibroDAO implements IMediatecaCRUD<Libro> {
+
     private Logger log = Log4JUtil.getLogger(Conexion.class);
 
     private String generarCodigoID(String tipo) throws SQLException {
@@ -23,11 +24,10 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
                 : tipo.equals("DVD") ? "DVD"
                 : null;
 
-        String sql = "SELECT IFNULL(MAX(CAST(SUBSTRING(codigo_ID, 4) AS UNSIGNED)), 0) + 1 AS nuevo_id " +
-                "FROM Material WHERE tipo = ?";
+        String sql = "SELECT IFNULL(MAX(CAST(SUBSTRING(codigo_ID, 4) AS UNSIGNED)), 0) + 1 AS nuevo_id "
+                + "FROM Material WHERE tipo = ?";
 
-        try (Connection conexion = Conexion.obtenerConexion();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conexion = Conexion.obtenerConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setString(1, tipo);
             try (ResultSet rs = ps.executeQuery()) {
@@ -48,8 +48,7 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
 
         String sqlMaterial = "INSERT INTO Material (codigo_ID, titulo, tipo) VALUES (?, ?, ?)";
 
-        try (Connection connection = Conexion.obtenerConexion();
-             PreparedStatement psMaterial = connection.prepareStatement(sqlMaterial)) {
+        try (Connection connection = Conexion.obtenerConexion(); PreparedStatement psMaterial = connection.prepareStatement(sqlMaterial)) {
 
             psMaterial.setString(1, codigoID);
             psMaterial.setString(2, titulo);
@@ -69,8 +68,7 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
 
         String sql = "INSERT INTO Libro(codigo_ID, autor, paginas, editorial, isbn, anio_publicacion, stock) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conexion = Conexion.obtenerConexion();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conexion = Conexion.obtenerConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setString(1, codigoID);
             ps.setString(2, libro.getAutor());
@@ -95,8 +93,8 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
         String sqlUpdateMaterial;
 
         try (Connection conexion = Conexion.obtenerConexion()) {
-            sqlUpdateLibro = "UPDATE Libro SET autor = ?, paginas = ?, editorial = ?, isbn = ?, anio_publicacion = ?, stock = ? " +
-                    "WHERE codigo_ID = ?";
+            sqlUpdateLibro = "UPDATE Libro SET autor = ?, paginas = ?, editorial = ?, isbn = ?, anio_publicacion = ?, stock = ? "
+                    + "WHERE codigo_ID = ?";
 
             sqlUpdateMaterial = "UPDATE Material SET titulo = ? WHERE codigo_ID = ?";
 
@@ -126,6 +124,7 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
 
         return result;
     }
+
     public int eliminar(String codigoId) throws Exception {
         int result = 0;
         String sql;
@@ -174,13 +173,11 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
     public List<Libro> listar() throws Exception {
         List<Libro> libros = new ArrayList<>();
 
-        String sql = "SELECT l.codigo_ID, m.titulo, l.autor, l.paginas, l.editorial, l.isbn, l.anio_publicacion, l.stock" +
-                " FROM Libro l " +
-                "JOIN Material m ON l.codigo_ID = m.codigo_ID";
+        String sql = "SELECT l.codigo_ID, m.titulo, l.autor, l.paginas, l.editorial, l.isbn, l.anio_publicacion, l.stock"
+                + " FROM Libro l "
+                + "JOIN Material m ON l.codigo_ID = m.codigo_ID";
 
-        try (Connection connection = Conexion.obtenerConexion();
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection connection = Conexion.obtenerConexion(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Libro libro = new Libro();
@@ -202,5 +199,75 @@ public class LibroDAO implements IMediatecaCRUD<Libro> {
 
         return libros;
     }
-}
 
+    public List<Libro> buscar(Libro libro) throws SQLException {
+        List<Libro> libros = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT l.codigo_ID, m.titulo, l.autor, l.editorial, l.isbn, l.anio_publicacion, l.paginas, l.stock "
+                + "FROM Libro l "
+                + "JOIN Material m ON l.codigo_ID = m.codigo_ID "
+                + "WHERE 1=1");
+
+        List<Object> parametros = new ArrayList<>();
+
+        if (libro.getCodigoId() != null && !libro.getCodigoId().isEmpty()) {
+            sql.append(" AND l.codigo_ID LIKE ?");
+            parametros.add("%" + libro.getCodigoId() + "%");
+        }
+        if (libro.getTitulo() != null && !libro.getTitulo().isEmpty()) {
+            sql.append(" AND m.titulo LIKE ?");
+            parametros.add("%" + libro.getTitulo() + "%");
+        }
+        if (libro.getAutor() != null && !libro.getAutor().isEmpty()) {
+            sql.append(" AND l.autor LIKE ?");
+            parametros.add("%" + libro.getAutor() + "%");
+        }
+        if (libro.getEditorial() != null && !libro.getEditorial().isEmpty()) {
+            sql.append(" AND l.editorial LIKE ?");
+            parametros.add("%" + libro.getEditorial() + "%");
+        }
+        if (libro.getIsbn() != null && !libro.getIsbn().isEmpty()) {
+            sql.append(" AND l.isbn LIKE ?");
+            parametros.add("%" + libro.getIsbn() + "%");
+        }
+        if (libro.getAnioPublicacion() != 0) {
+            sql.append(" AND l.anio_publicacion = ?");
+            parametros.add(libro.getAnioPublicacion());
+        }
+        if (libro.getPaginas() != 0) {
+            sql.append(" AND l.paginas = ?");
+            parametros.add(libro.getPaginas());
+        }
+        if (libro.getStock() != 0) {
+            sql.append(" AND l.stock = ?");
+            parametros.add(libro.getStock());
+        }
+
+        try (Connection connection = Conexion.obtenerConexion(); PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < parametros.size(); i++) {
+                ps.setObject(i + 1, parametros.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Libro resultado = new Libro();
+                    resultado.setCodigoId(rs.getString("codigo_ID"));
+                    resultado.setTitulo(rs.getString("titulo")); // Obtener el título desde Material
+                    resultado.setAutor(rs.getString("autor"));
+                    resultado.setEditorial(rs.getString("editorial"));
+                    resultado.setIsbn(rs.getString("isbn"));
+                    resultado.setAnioPublicacion(rs.getInt("anio_publicacion"));
+                    resultado.setPaginas(rs.getInt("paginas"));
+                    resultado.setStock(rs.getInt("stock"));
+
+                    libros.add(resultado);
+                }
+            }
+        } catch (SQLException e) {
+            log.error("Ocurrio un error inesperado: ", e);
+        }
+
+        return libros;
+    }
+
+}
