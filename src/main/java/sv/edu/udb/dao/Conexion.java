@@ -13,7 +13,7 @@ public class Conexion {
     private static String usuario = "root";
 
     // TODO Ojo, cambiar la clave correspondiente al usuario de Base de datos (en caso de ser necesario)
-    private static String clave = "PA$$123";
+    private static String clave = "admin";
     private static String servidor = "localhost";
     private static String puerto = "3306";
     private static String nombreBaseDeDatos = "mediateca";

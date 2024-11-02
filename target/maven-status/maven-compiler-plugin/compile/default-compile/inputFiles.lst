@@ -1,13 +1,16 @@
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\dao\CdAudioDAO.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\dao\Conexion.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\dao\DvdDAO.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\dao\LibroDAO.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\dao\RevistaDAO.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\entidades\CdAudio.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\entidades\Dvd.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\entidades\Libro.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\entidades\Material.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\entidades\Revista.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\Main.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\util\IMediatecaCRUD.java
-C:\Users\HP\Desktop\RepositoryPoo\CRUD-Mediateca\src\main\java\sv\edu\udb\util\Log4JUtil.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\dao\RevistaDAO.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\vistas\LibroForm.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\util\Log4JUtil.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\vistas\frmRegistrarLibro.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\dao\CdAudioDAO.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\entidades\Revista.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\entidades\Libro.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\entidades\CdAudio.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\entidades\Dvd.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\Main.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\dao\LibroDAO.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\util\IMediatecaCRUD.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\dao\DvdDAO.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\util\FrmEscOpcion.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\dao\Conexion.java
+C:\Users\abdia\Desktop\UNIVERSIDAD\CICLO 2\POO\DESAFIO2\CRUD-Mediateca\src\main\java\sv\edu\udb\entidades\Material.java
