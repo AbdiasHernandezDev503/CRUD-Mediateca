@@ -6,6 +6,7 @@ package sv.edu.udb.vistas;
 
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -89,6 +90,7 @@ public class FrmGestionDvd extends javax.swing.JFrame {
             dvdSearch.setGenero(this.TxtGenero.getText());
 
             listaDvdsActual = dvdDAO.buscar(dvdSearch);
+            cargarDvds();
         } catch (SQLException ex) {
             log.error("Ocurrió un error al buscar los libros.", ex);
         }
@@ -349,6 +351,9 @@ public class FrmGestionDvd extends javax.swing.JFrame {
         txtTitulo.setText("");
         TxtDirector.setText("");
         TxtGenero.setText("");
+        
+        listaDvdsActual = new ArrayList<>();
+        cargarDvds();
     }//GEN-LAST:event_btnLimpliarFiltrosActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed

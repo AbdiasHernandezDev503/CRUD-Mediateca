@@ -17,8 +17,6 @@ import sv.edu.udb.util.Log4JUtil;
  * @author Abdias_Hernandez
  */
 public class FrmRegistrarLibro extends javax.swing.JFrame {
-
-    private int opcionForm;
     private FrmGestionLibros listarLibros;
     private Libro libro;
     private Logger log = Log4JUtil.getLogger(FrmRegistrarLibro.class);

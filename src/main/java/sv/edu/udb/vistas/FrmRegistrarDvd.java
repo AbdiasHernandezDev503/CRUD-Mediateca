@@ -7,12 +7,9 @@ package sv.edu.udb.vistas;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import sv.edu.udb.dao.DvdDAO;
 import sv.edu.udb.entidades.Dvd;
-import javax.swing.JButton;
-import javax.swing.JPanel;
 import org.apache.logging.log4j.Logger;
 import sv.edu.udb.util.Log4JUtil;
 

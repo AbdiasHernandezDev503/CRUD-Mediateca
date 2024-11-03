@@ -10,8 +10,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class DvdDAO implements IMediatecaCRUD<Dvd> {
+
     private Logger log = Log4JUtil.getLogger(Conexion.class);
 
     private String generarCodigoID(String tipo) throws SQLException {
@@ -22,11 +22,10 @@ public class DvdDAO implements IMediatecaCRUD<Dvd> {
                 : tipo.equals("DVD") ? "DVD"
                 : null;
 
-        String sql = "SELECT IFNULL(MAX(CAST(SUBSTRING(codigo_ID, 4) AS UNSIGNED)), 0) + 1 AS nuevo_id " +
-                "FROM Material WHERE tipo = ?";
+        String sql = "SELECT IFNULL(MAX(CAST(SUBSTRING(codigo_ID, 4) AS UNSIGNED)), 0) + 1 AS nuevo_id "
+                + "FROM Material WHERE tipo = ?";
 
-        try (Connection conexion = Conexion.obtenerConexion();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conexion = Conexion.obtenerConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setString(1, tipo);
             try (ResultSet rs = ps.executeQuery()) {
@@ -47,8 +46,7 @@ public class DvdDAO implements IMediatecaCRUD<Dvd> {
 
         String sqlMaterial = "INSERT INTO Material (codigo_ID, titulo, tipo) VALUES (?, ?, ?)";
 
-        try (Connection connection = Conexion.obtenerConexion();
-             PreparedStatement psMaterial = connection.prepareStatement(sqlMaterial)) {
+        try (Connection connection = Conexion.obtenerConexion(); PreparedStatement psMaterial = connection.prepareStatement(sqlMaterial)) {
 
             psMaterial.setString(1, codigoID);
             psMaterial.setString(2, titulo);
@@ -68,8 +66,7 @@ public class DvdDAO implements IMediatecaCRUD<Dvd> {
 
         String sql = "INSERT INTO DVD(codigo_ID, director, duracion, genero, stock) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conexion = Conexion.obtenerConexion();
-             PreparedStatement ps = conexion.prepareStatement(sql)) {
+        try (Connection conexion = Conexion.obtenerConexion(); PreparedStatement ps = conexion.prepareStatement(sql)) {
 
             ps.setString(1, codigoID);
             ps.setString(2, dvd.getDirector());
@@ -92,8 +89,8 @@ public class DvdDAO implements IMediatecaCRUD<Dvd> {
         String sqlUpdateMaterial;
 
         try (Connection conexion = Conexion.obtenerConexion()) {
-            sqlUpdateDvd = "UPDATE DVD SET director = ?, duracion = ?, genero = ?, stock = ? " +
-                    "WHERE codigo_ID = ?";
+            sqlUpdateDvd = "UPDATE DVD SET director = ?, duracion = ?, genero = ?, stock = ? "
+                    + "WHERE codigo_ID = ?";
 
             sqlUpdateMaterial = "UPDATE Material SET titulo = ? WHERE codigo_ID = ?";
 
@@ -154,15 +151,16 @@ public class DvdDAO implements IMediatecaCRUD<Dvd> {
     public List<Dvd> listar() throws Exception {
         List<Dvd> dvds = new ArrayList<>();
 
-        String sql = "SELECT codigo_ID, director, duracion, genero, stock FROM DVD";
+        String sql = "SELECT d.codigo_ID, m.titulo, d.director, d.duracion, d.genero, d.stock "
+                + "FROM DVD d "
+                + "JOIN Material m ON d.codigo_ID = m.codigo_ID";
 
-        try (Connection connection = Conexion.obtenerConexion();
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection connection = Conexion.obtenerConexion(); PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 Dvd dvd = new Dvd();
                 dvd.setCodigoId(rs.getString("codigo_ID"));
+                dvd.setTitulo(rs.getString("titulo"));
                 dvd.setDirector(rs.getString("director"));
                 dvd.setDuracion(rs.getTime("duracion").toLocalTime());
                 dvd.setGenero(rs.getString("genero"));

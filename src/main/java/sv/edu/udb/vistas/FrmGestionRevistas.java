@@ -2,6 +2,7 @@ package sv.edu.udb.vistas;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -123,6 +124,11 @@ public class FrmGestionRevistas extends javax.swing.JFrame {
         });
 
         btnLimpiar.setText("Limpiar filtros");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -278,34 +284,33 @@ public class FrmGestionRevistas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
+       RevistaForm revistaForm = new RevistaForm(this);
+       revistaForm.setVisible(true);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        /*
+        
         int filaSeleccionada = tbRevistas.getSelectedRow();
         if (filaSeleccionada != -1) {
             Revista revistaSeleccionada = new Revista();
             
             revistaSeleccionada.setCodigoId((String) modeloTabla.getValueAt(filaSeleccionada, 0));
             revistaSeleccionada.setTitulo((String) modeloTabla.getValueAt(filaSeleccionada, 1));
-            revistaSeleccionada.setAutor((String) modeloTabla.getValueAt(filaSeleccionada, 2));
-            revistaSeleccionada.setEditorial((String) modeloTabla.getValueAt(filaSeleccionada, 3));
-            revistaSeleccionada.setIsbn((String) modeloTabla.getValueAt(filaSeleccionada, 4));
-            revistaSeleccionada.setAnioPublicacion(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 5).toString()));
-            revistaSeleccionada.setPaginas(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 6).toString()));
-            revistaSeleccionada.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 7).toString()));
+            revistaSeleccionada.setEditorial((String) modeloTabla.getValueAt(filaSeleccionada, 2));
+            revistaSeleccionada.setPeriodicidad((String) modeloTabla.getValueAt(filaSeleccionada, 3));
+            revistaSeleccionada.setFechaPublicacion(new java.util.Date(((java.sql.Date) modeloTabla.getValueAt(filaSeleccionada, 4)).getTime()));
+            revistaSeleccionada.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 5).toString()));
 
-            FrmRegistrarLibro frmRegistrarLibro = new FrmRegistrarLibro(this);
+            RevistaForm revistaForm = new RevistaForm(this);
 
-            frmRegistrarLibro.setVisible(true);
-            frmRegistrarLibro.setTitle("Modificar Libro");
-            frmRegistrarLibro.lblHeader.setText("Modificar Libro Seleccionado: " + libroSeleccionado.getCodigoId());
-            frmRegistrarLibro.btnGuardar.setText("Modificar");
-            frmRegistrarLibro.llenarDatosFormulario(libroSeleccionado);
+            revistaForm.setVisible(true);
+            revistaForm.setTitle("Modificar Libro");
+            revistaForm.lblHeader.setText("Modificar Libro Seleccionado: " + revistaSeleccionada.getCodigoId());
+            revistaForm.btnGuardar.setText("Modificar");
+            revistaForm.llenarDatosFormulario(revistaSeleccionada);
 
         }
-         */
+         
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -349,6 +354,15 @@ public class FrmGestionRevistas extends javax.swing.JFrame {
         this.buscarRevistas();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        txtBuscarTitulo.setText("");
+        txtBuscarEditorial.setText("");
+        
+        listaRevistasActual = new ArrayList<>();
+        
+        cargarRevistas();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -383,6 +397,16 @@ public class FrmGestionRevistas extends javax.swing.JFrame {
             }
         });
     }
+
+    public List<Revista> getListaRevistasActual() {
+        return listaRevistasActual;
+    }
+
+    public void setListaRevistasActual(List<Revista> listaRevistasActual) {
+        this.listaRevistasActual = listaRevistasActual;
+    }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
