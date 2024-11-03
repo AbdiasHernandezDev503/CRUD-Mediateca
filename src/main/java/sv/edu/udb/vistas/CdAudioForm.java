@@ -4,22 +4,70 @@
  */
 package sv.edu.udb.vistas;
 
+import javax.swing.JOptionPane;
 import sv.edu.udb.entidades.CdAudio;
-
+import java.time.LocalTime;
+import java.util.ArrayList;
+import org.apache.logging.log4j.Logger;
+import sv.edu.udb.dao.CdAudioDAO;
+import sv.edu.udb.util.Log4JUtil;
 /**
  *
  * @author HP
  */
 public class CdAudioForm extends javax.swing.JFrame {
-    private CdAudio cdAudio;
-    private FrmGestionCdAudio frmGestionCdAudio;
 
+    private CdAudio cdAudio;
+    private FrmGestionCdAudio listarCdAudio;
+
+    private Logger log = Log4JUtil.getLogger(CdAudioForm.class);
+    
     /**
      * Creates new form CdAudioForm
      */
     public CdAudioForm(FrmGestionCdAudio frmGestionCdAudio) {
         initComponents();
-        this.frmGestionCdAudio = frmGestionCdAudio;
+        this.listarCdAudio = frmGestionCdAudio;
+    }
+
+    public boolean validarDatos() {
+        if (txtTitulo.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo Título no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtTitulo.requestFocus();
+            return false;
+        }
+
+        if (txtArtista.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo Artista no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtArtista.requestFocus();
+            return false;
+        }
+
+        if (txtGenero.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo Género no debe estar vacio.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtGenero.requestFocus();
+            return false;
+        }
+
+        if (txtDuracion.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo Duración no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtDuracion.requestFocus();
+            return false;
+        }
+
+        if ((int) txtCanciones.getValue() <= 0) {
+            JOptionPane.showMessageDialog(this, "El número de canciones no puede ser menor que 0.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtCanciones.requestFocus();
+            return false;
+        }
+
+        if ((int) txtStock.getValue() <= 0) {
+            JOptionPane.showMessageDialog(this, "El campo Stock no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtStock.requestFocus();
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -77,6 +125,11 @@ public class CdAudioForm extends javax.swing.JFrame {
         jLabel8.setText("Stock:");
 
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -185,6 +238,84 @@ public class CdAudioForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if (!validarDatos()) {
+            return;
+        }
+        if (btnGuardar.getText().equals("Guardar")) {
+
+            CdAudio cdAudio = new CdAudio();
+
+            cdAudio.setTitulo(this.txtTitulo.getText());
+            cdAudio.setArtista(this.txtArtista.getText());
+            cdAudio.setGenero(this.txtGenero.getText());
+            String duracionTexto = txtDuracion.getText();
+            LocalTime duracion = LocalTime.parse(duracionTexto);
+            cdAudio.setDuracion(duracion);
+            cdAudio.setCanciones((int) this.txtCanciones.getValue());
+            cdAudio.setStock((int) this.txtStock.getValue());
+
+            CdAudioDAO cdAudioDAO = new CdAudioDAO();
+
+            try {
+                int result = cdAudioDAO.crear(cdAudio);
+
+                if (result > 0) {
+                    JOptionPane.showMessageDialog(null,
+                            "Los datos se han ingresado correctamente!!",
+                            "Éxito",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    this.listarCdAudio.setListaCdAudioActual(new ArrayList<>());
+                    this.listarCdAudio.cargarCdAudios();
+
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Ocurrió un error inesperado al guardar los datos",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                log.error("Ocurrió el siguiente error: ", ex.getMessage());
+            }
+        } else if (btnGuardar.getText().equals("Modificar")) {
+            cdAudio.setTitulo(this.txtTitulo.getText());
+            cdAudio.setArtista(this.txtArtista.getText());
+            cdAudio.setGenero(this.txtGenero.getText());
+            String duracionTexto = txtDuracion.getText();
+            LocalTime duracion = LocalTime.parse(duracionTexto);
+            cdAudio.setDuracion(duracion);
+            cdAudio.setCanciones((int) this.txtCanciones.getValue());
+            cdAudio.setStock((int) this.txtStock.getValue());
+
+            CdAudioDAO cdAudioDAO = new CdAudioDAO();
+
+            try {
+                int result = cdAudioDAO.modificar(cdAudio);
+
+                if (result > 0) {
+                    JOptionPane.showMessageDialog(null,
+                            "Los datos se han modificado correctamente!!",
+                            "Éxito",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    this.listarCdAudio.setListaCdAudioActual(new ArrayList<>());
+                    this.listarCdAudio.cargarCdAudios();
+
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Ocurrió un error inesperado al modificar los datos",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                log.error("Ocurrió el siguiente error: ", ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Ocurrió un error al modificar los datos.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -231,7 +362,7 @@ public class CdAudioForm extends javax.swing.JFrame {
         txtCanciones.setValue(cdAudio.getCanciones());
         txtStock.setValue(cdAudio.getStock());
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnCancelar;
     public javax.swing.JButton btnGuardar;

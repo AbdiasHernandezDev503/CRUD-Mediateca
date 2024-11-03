@@ -385,6 +385,14 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
             }
         });
     }
+   
+    public List<CdAudio> getListaCdAudiosActual() {
+        return listaCdAudioActual;
+    }
+
+    public void setListaCdAudioActual(List<CdAudio> listaCdAudiosActual) {
+        this.listaCdAudioActual = listaCdAudioActual;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntEliminar;
