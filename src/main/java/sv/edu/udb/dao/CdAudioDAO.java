@@ -175,4 +175,51 @@ public class CdAudioDAO implements IMediatecaCRUD<CdAudio> {
 
         return cdAudios;
     }
+    public List<CdAudio> buscar(CdAudio cdAudio) throws SQLException {
+        List<CdAudio> cdAudios = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT c.codigo_ID, m.titulo, c.artista, c.genero, c.duracion, c.canciones, c.stock "
+                + "FROM CD_Audio c "
+                + "JOIN Material m ON c.codigo_ID = m.codigo_ID "
+                + "WHERE 1=1");
+
+        List<Object> parametros = new ArrayList<>();
+
+        if (cdAudio.getTitulo() != null && !cdAudio.getTitulo().isEmpty()) {
+            sql.append(" AND m.titulo LIKE ?");
+            parametros.add("%" + cdAudio.getTitulo() + "%");
+        }
+        if (cdAudio.getArtista() != null && !cdAudio.getArtista().isEmpty()) {
+            sql.append(" AND c.artista LIKE ?");
+            parametros.add("%" + cdAudio.getArtista() + "%");
+        }
+        if (cdAudio.getGenero() != null && !cdAudio.getGenero().isEmpty()) {
+            sql.append(" AND c.genero LIKE ?");
+            parametros.add("%" + cdAudio.getGenero() + "%");
+        }
+
+        try (Connection connection = Conexion.obtenerConexion(); PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < parametros.size(); i++) {
+                ps.setObject(i + 1, parametros.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    CdAudio resultado = new CdAudio();
+                    resultado.setCodigoId(rs.getString("codigo_ID"));
+                    resultado.setTitulo(rs.getString("titulo"));
+                    resultado.setArtista(rs.getString("artista"));
+                    resultado.setGenero(rs.getString("genero"));
+                    resultado.setDuracion(rs.getTime("duracion").toLocalTime());
+                    resultado.setCanciones(rs.getInt("canciones"));
+                    resultado.setStock(rs.getInt("stock"));
+
+                    cdAudios.add(resultado);
+                }
+            }
+        } catch (SQLException e) {
+            log.error("Ocurrió un error inesperado al buscar.", e.getMessage());
+        }
+
+        return cdAudios;
+    }
 }

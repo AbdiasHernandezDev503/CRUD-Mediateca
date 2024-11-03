@@ -4,18 +4,98 @@
  */
 package sv.edu.udb.vistas;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import org.apache.logging.log4j.Logger;
+import sv.edu.udb.dao.DvdDAO;
+import sv.edu.udb.entidades.Dvd;
+import sv.edu.udb.util.Log4JUtil;
 /**
  *
  * @author HP
  */
 public class FrmGestionDvd extends javax.swing.JFrame {
 
+    
+    
+    private Logger log = Log4JUtil.getLogger(FrmGestionDvd.class);
+    private DvdDAO dvdDAO = new DvdDAO();
+    private List<Dvd> listaDvdsActual = new ArrayList<>();
+    private DefaultTableModel modeloTabla = new DefaultTableModel();
+    
+      public FrmGestionDvd() {
+        initComponents();
+        btnEliminar.setEnabled(tbDvds.getSelectedRow() != -1);
+        btnModificar.setEnabled(tbDvds.getSelectedRow() != -1);
+        setResizable(false);
+        cargarDvds(); 
+    }
+    
+    public void cargarLibros() {
+        String[] columnas = {"Código", "Título", "Director", "Duracion", "Genero", "Stock"};
+        modeloTabla = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        tbDvds.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                boolean seleccionoFila = tbDvds.getSelectedRow() != -1;
+                btnModificar.setEnabled(seleccionoFila);
+                btnEliminar.setEnabled(seleccionoFila);
+            }
+            
+        });
+        
+        modeloTabla.setRowCount(0);
+        
+        try {
+            if (listaDvdsActual.isEmpty()) {
+                listaDvdsActual = dvdDAO.listar();
+            }
+            
+            for (Dvd dvd : listaDvdsActual) {
+                Object[] fila = {
+                    dvd.getCodigoId(),
+                    dvd.getTitulo(),
+                    dvd.getDirector(),
+                    dvd.getDuracion(),
+                    dvd.getGenero(),             
+                    dvd.getStock()
+                };
+                modeloTabla.addRow(fila);
+            }
+            
+            tbDvds.setModel(modeloTabla);
+            
+        } catch (Exception ex) {
+            log.error("Error inesperado al listar los libros: ", ex);
+        }
+    }
+    
+    public void buscarDvds() {
+        Dvd dvdSearch = new Dvd();
+        dvdSearch.setTitulo(this.txtTitulo.getText());
+        dvdSearch.setDirector(this.TxtDirector.getText());
+        dvdSearch.setGenero(this.TxtGenero.getText());
+        listaDvdsActual = dvdDAO.buscar(dvdSearch);
+        cargarDvds();
+    }
     /**
      * Creates new form FrmGestionDvd
      */
-    public FrmGestionDvd() {
-        initComponents();
-    }
+   //public FrmGestionDvd() {
+       // initComponents();
+    //}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -39,7 +119,7 @@ public class FrmGestionDvd extends javax.swing.JFrame {
         btnLimpliarFiltros = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tbLibros = new javax.swing.JTable();
+        tbDvds = new javax.swing.JTable();
         btnNuevo = new javax.swing.JButton();
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
@@ -62,8 +142,18 @@ public class FrmGestionDvd extends javax.swing.JFrame {
         jLabel5.setText("Genero:");
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnLimpliarFiltros.setText("Limpiar filtros");
+        btnLimpliarFiltros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpliarFiltrosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -113,7 +203,7 @@ public class FrmGestionDvd extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("Busqueda de Dvd");
 
-        tbLibros.setModel(new javax.swing.table.DefaultTableModel(
+        tbDvds.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -133,7 +223,7 @@ public class FrmGestionDvd extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tbLibros);
+        jScrollPane1.setViewportView(tbDvds);
 
         btnNuevo.setText("Nuevo");
         btnNuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -215,7 +305,25 @@ public class FrmGestionDvd extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+        int filaSeleccionada = tbDvds.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            // Crear un objeto Libro con los datos de la fila seleccionada
+            Dvd dvdSeleccionado = new Dvd();
+            dvdSeleccionado.setCodigoId((String) modeloTabla.getValueAt(filaSeleccionada, 0));
+            dvdSeleccionado.setTitulo((String) modeloTabla.getValueAt(filaSeleccionada, 1));
+            dvdSeleccionado.setDirector((String) modeloTabla.getValueAt(filaSeleccionada, 2));
+            //dvdSeleccionado.setDuracion((String) modeloTabla.getValueAt(filaSeleccionada, 3));      
+            dvdSeleccionado.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 7).toString()));
+            
+            FrmRegistrarDvd frmRegistrarDvd = new FrmRegistrarDvd(this);
+            
+            frmRegistrarDvd.setVisible(true);
+            frmRegistrarDvd.setTitle("Modificar DVD");
+            frmRegistrarDvd.lblHeader.setText("Modificar DVD Seleccionado: " + dvdSeleccionado.getCodigoId());
+            frmRegistrarDvd.btnGuardar.setText("Modificar");
+            frmRegistrarDvd.llenarDatosFormulario(dvdSeleccionado);
+            
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -225,6 +333,16 @@ public class FrmGestionDvd extends javax.swing.JFrame {
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnLimpliarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpliarFiltrosActionPerformed
+        txtTitulo.setText("");
+        TxtDirector.setText("");
+        TxtGenero.setText("");
+    }//GEN-LAST:event_btnLimpliarFiltrosActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+         this.buscardvds();
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -278,7 +396,15 @@ public class FrmGestionDvd extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tbLibros;
+    private javax.swing.JTable tbDvds;
     private javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
+
+    private void buscardvds() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private void cargarDvds() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
