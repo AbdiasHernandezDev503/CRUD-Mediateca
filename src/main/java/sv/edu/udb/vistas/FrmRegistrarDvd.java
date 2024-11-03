@@ -4,16 +4,17 @@
  */
 package sv.edu.udb.vistas;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import sv.edu.udb.dao.DvdDAO;
 import sv.edu.udb.entidades.Dvd;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
-
-
-
+import org.apache.logging.log4j.Logger;
+import sv.edu.udb.util.Log4JUtil;
 
 /**
  *
@@ -21,17 +22,15 @@ import javax.swing.JPanel;
  */
 public class FrmRegistrarDvd extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FrmRegistrarDvd
-     */
-    public FrmRegistrarDvd(JFrame parent) {
-        initComponents();
-    }
-    
+    private Dvd dvd;
+    private FrmGestionDvd listarDvd;
+    private Logger log = Log4JUtil.getLogger(FrmRegistrarDvd.class);
 
-    /**
-     * ......................................................................................................................................................
-     */
+    public FrmRegistrarDvd(FrmGestionDvd listarDvd) {
+        initComponents();
+        this.listarDvd = listarDvd;
+    }
+
     public boolean validarDatos() {
         if (txtTitulo.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(this, "El campo Título no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -59,6 +58,17 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
             return false;
         }
         return true;
+    }
+
+    public void llenarDatosFormulario(Dvd dvd) {
+        this.dvd = dvd;
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        txtTitulo.setText(dvd.getTitulo());
+        txtDirector.setText(dvd.getDirector());
+        txtDuracion.setText(dvd.getDuracion().format(formatter));
+        txtGenero.setText(dvd.getGenero());
+        txtStock.setValue(dvd.getStock());
     }
 
     /**
@@ -202,7 +212,10 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
 
             dvd.setTitulo(this.txtTitulo.getText());
             dvd.setDirector(this.txtDirector.getText());
-            /*dvd.setDuracion(this.txtDuracion.getText());**/
+
+            String duracionTexto = txtDuracion.getText();
+            LocalTime duracion = LocalTime.parse(duracionTexto);
+            dvd.setDuracion(duracion);
             dvd.setGenero(this.txtGenero.getText());
             dvd.setStock((int) this.txtStock.getValue());
 
@@ -216,7 +229,8 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
                             "Los datos se han ingresado correctamente!!",
                             "Éxito",
                             JOptionPane.INFORMATION_MESSAGE);
-                   // this.dvds.cargardvds();
+                    this.listarDvd.setListaDvdsActual(new ArrayList<>());
+                    this.listarDvd.cargarDvds();
 
                     dispose();
                 } else {
@@ -226,29 +240,30 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
-              //  log.error("Ocurrió el siguiente error: ", ex.getMessage());
+                //  log.error("Ocurrió el siguiente error: ", ex.getMessage());
             }
         } else if (btnGuardar.getText().equals("Modificar")) {
-            Dvd dvd = new Dvd();
-
             dvd.setTitulo(this.txtTitulo.getText());
             dvd.setDirector(this.txtDirector.getText());
-           // dvd.setDuracion(this.txtDuracion.getText());
+
+            String duracionTexto = txtDuracion.getText();
+            LocalTime duracion = LocalTime.parse(duracionTexto); // Convertir a LocalTime
+            dvd.setDuracion(duracion);
             dvd.setGenero(this.txtGenero.getText());
             dvd.setStock((int) this.txtStock.getValue());
 
             DvdDAO dvdDAO = new DvdDAO();
 
             try {
-                int result = 0;
-               // int result = DvdDAO.modificar(dvd);
+                int result = dvdDAO.modificar(dvd);
 
                 if (result > 0) {
                     JOptionPane.showMessageDialog(null,
                             "Los datos se han modificado correctamente!!",
                             "Éxito",
                             JOptionPane.INFORMATION_MESSAGE);
-                  //  this.listarDvd.cargarDvd();
+                    this.listarDvd.setListaDvdsActual(new ArrayList<>());
+                    this.listarDvd.cargarDvds();
 
                     dispose();
                 } else {
@@ -258,7 +273,7 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
-               // log.error("Ocurrió el siguiente error: ", ex.getMessage());
+                log.error("Ocurrió el siguiente error: ", ex);
                 JOptionPane.showMessageDialog(this, "Ocurrió un error al modificar los datos.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -300,18 +315,18 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel lblHeader;
-    private javax.swing.JTextField txtDirector;
-    private javax.swing.JTextField txtDuracion;
-    private javax.swing.JTextField txtGenero;
-    private javax.swing.JSpinner txtStock;
-    private javax.swing.JTextField txtTitulo;
+    public javax.swing.JButton btnCancelar;
+    public javax.swing.JButton btnGuardar;
+    public javax.swing.JLabel jLabel2;
+    public javax.swing.JLabel jLabel3;
+    public javax.swing.JLabel jLabel4;
+    public javax.swing.JLabel jLabel5;
+    public javax.swing.JLabel jLabel6;
+    public javax.swing.JLabel lblHeader;
+    public javax.swing.JTextField txtDirector;
+    public javax.swing.JTextField txtDuracion;
+    public javax.swing.JTextField txtGenero;
+    public javax.swing.JSpinner txtStock;
+    public javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
 }

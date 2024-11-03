@@ -67,8 +67,8 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
                 Object[] fila = {
                     cdAudio.getCodigoId(),
                     cdAudio.getArtista(),
-                    cdAudio.getGénero(),
-                    cdAudio.getDuración(),
+                    cdAudio.getGenero(),
+                    cdAudio.getDuracion(),
                     cdAudio.getCanciones(),                             
                     cdAudio.getStock()
                 };
@@ -282,13 +282,12 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
         if (filaSeleccionada != -1) {
             // Crear un objeto Libro con los datos de la fila seleccionada
             CdAudio cdAudioSeleccionado = new CdAudio();
-            cdAudioSeleccionado.setCodigoId((String) modeloTabla.getValueAt(filaSeleccionada, 0));
-            cdAudioSeleccionado.setTitulo((String) modeloTabla.getValueAt(filaSeleccionada, 1));
-            cdAudioSeleccionado.setArtista((String) modeloTabla.getValueAt(filaSeleccionada, 2));
-            cdAudioSeleccionado.setGenero((String) modeloTabla.getValueAt(filaSeleccionada, 3));
-            cdAudioSeleccionado.setDuracion((LocalTime) modeloTabla.getValueAt(filaSeleccionada, 4));
-            cdAudioSeleccionado.setCanciones(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 5).toString()));
-            cdAudioSeleccionado.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 6).toString()));
+            cdAudioSeleccionado.setTitulo((String) modeloTabla.getValueAt(filaSeleccionada, 0));
+            cdAudioSeleccionado.setArtista((String) modeloTabla.getValueAt(filaSeleccionada, 1));
+            cdAudioSeleccionado.setGenero((String) modeloTabla.getValueAt(filaSeleccionada, 2));
+            cdAudioSeleccionado.setDuracion((LocalTime) modeloTabla.getValueAt(filaSeleccionada, 3));
+            cdAudioSeleccionado.setCanciones(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 4).toString()));
+            cdAudioSeleccionado.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 5).toString()));
             
             CdAudioForm cdAudioForm = new CdAudioForm(this);
             

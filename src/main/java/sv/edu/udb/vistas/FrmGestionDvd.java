@@ -5,9 +5,9 @@
 package sv.edu.udb.vistas;
 
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -16,28 +16,27 @@ import org.apache.logging.log4j.Logger;
 import sv.edu.udb.dao.DvdDAO;
 import sv.edu.udb.entidades.Dvd;
 import sv.edu.udb.util.Log4JUtil;
+
 /**
  *
  * @author HP
  */
 public class FrmGestionDvd extends javax.swing.JFrame {
 
-    
-    
     private Logger log = Log4JUtil.getLogger(FrmGestionDvd.class);
     private DvdDAO dvdDAO = new DvdDAO();
     private List<Dvd> listaDvdsActual = new ArrayList<>();
     private DefaultTableModel modeloTabla = new DefaultTableModel();
-    
-      public FrmGestionDvd() {
+
+    public FrmGestionDvd() {
         initComponents();
         btnEliminar.setEnabled(tbDvds.getSelectedRow() != -1);
         btnModificar.setEnabled(tbDvds.getSelectedRow() != -1);
         setResizable(false);
-        cargarDvds(); 
+        cargarDvds();
     }
-    
-    public void cargarLibros() {
+
+    public void cargarDvds() {
         String[] columnas = {"Código", "Título", "Director", "Duracion", "Genero", "Stock"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
@@ -45,7 +44,7 @@ public class FrmGestionDvd extends javax.swing.JFrame {
                 return false;
             }
         };
-        
+
         tbDvds.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -53,48 +52,53 @@ public class FrmGestionDvd extends javax.swing.JFrame {
                 btnModificar.setEnabled(seleccionoFila);
                 btnEliminar.setEnabled(seleccionoFila);
             }
-            
+
         });
-        
+
         modeloTabla.setRowCount(0);
-        
+
         try {
             if (listaDvdsActual.isEmpty()) {
                 listaDvdsActual = dvdDAO.listar();
             }
-            
+
             for (Dvd dvd : listaDvdsActual) {
                 Object[] fila = {
                     dvd.getCodigoId(),
                     dvd.getTitulo(),
                     dvd.getDirector(),
                     dvd.getDuracion(),
-                    dvd.getGenero(),             
+                    dvd.getGenero(),
                     dvd.getStock()
                 };
                 modeloTabla.addRow(fila);
             }
-            
+
             tbDvds.setModel(modeloTabla);
-            
+
         } catch (Exception ex) {
             log.error("Error inesperado al listar los libros: ", ex);
         }
     }
-    
+
     public void buscarDvds() {
-        Dvd dvdSearch = new Dvd();
-        dvdSearch.setTitulo(this.txtTitulo.getText());
-        dvdSearch.setDirector(this.TxtDirector.getText());
-        dvdSearch.setGenero(this.TxtGenero.getText());
-        listaDvdsActual = dvdDAO.buscar(dvdSearch);
-        cargarDvds();
+        try {
+            Dvd dvdSearch = new Dvd();
+            dvdSearch.setTitulo(this.txtTitulo.getText());
+            dvdSearch.setDirector(this.TxtDirector.getText());
+            dvdSearch.setGenero(this.TxtGenero.getText());
+
+            listaDvdsActual = dvdDAO.buscar(dvdSearch);
+        } catch (SQLException ex) {
+            log.error("Ocurrió un error al buscar los libros.", ex);
+        }
     }
+
     /**
      * Creates new form FrmGestionDvd
      */
-   //public FrmGestionDvd() {
-       // initComponents();
+    //public FrmGestionDvd() {
+    // initComponents();
     //}
 
     /**
@@ -240,6 +244,11 @@ public class FrmGestionDvd extends javax.swing.JFrame {
         });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -307,31 +316,33 @@ public class FrmGestionDvd extends javax.swing.JFrame {
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         int filaSeleccionada = tbDvds.getSelectedRow();
         if (filaSeleccionada != -1) {
-            // Crear un objeto Libro con los datos de la fila seleccionada
             Dvd dvdSeleccionado = new Dvd();
             dvdSeleccionado.setCodigoId((String) modeloTabla.getValueAt(filaSeleccionada, 0));
             dvdSeleccionado.setTitulo((String) modeloTabla.getValueAt(filaSeleccionada, 1));
             dvdSeleccionado.setDirector((String) modeloTabla.getValueAt(filaSeleccionada, 2));
-            //dvdSeleccionado.setDuracion((String) modeloTabla.getValueAt(filaSeleccionada, 3));      
-            dvdSeleccionado.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 7).toString()));
-            
+            dvdSeleccionado.setDuracion((LocalTime) modeloTabla.getValueAt(filaSeleccionada, 3));
+            dvdSeleccionado.setGenero((String) modeloTabla.getValueAt(filaSeleccionada, 4));
+            dvdSeleccionado.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 5).toString()));
+
             FrmRegistrarDvd frmRegistrarDvd = new FrmRegistrarDvd(this);
-            
+
             frmRegistrarDvd.setVisible(true);
             frmRegistrarDvd.setTitle("Modificar DVD");
             frmRegistrarDvd.lblHeader.setText("Modificar DVD Seleccionado: " + dvdSeleccionado.getCodigoId());
             frmRegistrarDvd.btnGuardar.setText("Modificar");
             frmRegistrarDvd.llenarDatosFormulario(dvdSeleccionado);
-            
+
         }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-         dispose();
+        dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        // TODO add your handling code here:
+        FrmRegistrarDvd frmRegistrarDvd = new FrmRegistrarDvd(this);
+
+        frmRegistrarDvd.setVisible(true);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnLimpliarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpliarFiltrosActionPerformed
@@ -341,8 +352,41 @@ public class FrmGestionDvd extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimpliarFiltrosActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-         this.buscardvds();
+        this.buscarDvds();
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int filaSeleccionada = tbDvds.getSelectedRow();
+
+        if (filaSeleccionada != -1) {
+            String codigoId = (String) modeloTabla.getValueAt(filaSeleccionada, 0);
+
+            // Mostrar un cuadro de diálogo de confirmación
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                    "¿Estás seguro de que deseas eliminar este DVD?",
+                    "Confirmar Eliminación",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                try {
+                    int result = dvdDAO.eliminar(codigoId);
+
+                    if (result > 0) {
+                        JOptionPane.showMessageDialog(this, "El libro ha sido eliminado exitosamente.");
+                        modeloTabla.removeRow(filaSeleccionada);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error al eliminar el libro. Intente nuevamente.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    log.error("Ocurrio un error al eliminar el registro: ", ex.getMessage());
+                    JOptionPane.showMessageDialog(this, "Ocurrió un error al intentar eliminar el libro.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un libro para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -379,6 +423,15 @@ public class FrmGestionDvd extends javax.swing.JFrame {
         });
     }
 
+    public List<Dvd> getListaDvdsActual() {
+        return listaDvdsActual;
+    }
+
+    public void setListaDvdsActual(List<Dvd> listaDvdsActual) {
+        this.listaDvdsActual = listaDvdsActual;
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField TxtDirector;
     private javax.swing.JTextField TxtGenero;
@@ -399,12 +452,4 @@ public class FrmGestionDvd extends javax.swing.JFrame {
     private javax.swing.JTable tbDvds;
     private javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
-
-    private void buscardvds() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    private void cargarDvds() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }
