@@ -4,9 +4,14 @@
  */
 package sv.edu.udb.vistas;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import sv.edu.udb.dao.DvdDAO;
 import sv.edu.udb.entidades.Dvd;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+
 
 
 
@@ -19,7 +24,7 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
     /**
      * Creates new form FrmRegistrarDvd
      */
-    public FrmRegistrarDvd() {
+    public FrmRegistrarDvd(JFrame parent) {
         initComponents();
     }
     
@@ -65,7 +70,7 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lblHeader = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -81,8 +86,8 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setText("Registrar DVD");
+        lblHeader.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblHeader.setText("Registrar DVD");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("Director:");
@@ -124,7 +129,7 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
                         .addGap(62, 62, 62)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel1)))
+                            .addComponent(lblHeader)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(59, 59, 59)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -152,7 +157,7 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(jLabel1)
+                .addComponent(lblHeader)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -211,7 +216,7 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
                             "Los datos se han ingresado correctamente!!",
                             "Éxito",
                             JOptionPane.INFORMATION_MESSAGE);
-                  //  this.listarLibros.cargarLibros();
+                   // this.dvds.cargardvds();
 
                     dispose();
                 } else {
@@ -289,7 +294,7 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FrmRegistrarDvd().setVisible(true);
+                new FrmRegistrarDvd(null).setVisible(true);
             }
         });
     }
@@ -297,12 +302,12 @@ public class FrmRegistrarDvd extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel lblHeader;
     private javax.swing.JTextField txtDirector;
     private javax.swing.JTextField txtDuracion;
     private javax.swing.JTextField txtGenero;
