@@ -4,6 +4,7 @@
  */
 package sv.edu.udb.vistas;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import org.apache.logging.log4j.Logger;
@@ -288,6 +289,7 @@ public class FrmRegistrarLibro extends javax.swing.JFrame {
                             "Los datos se han ingresado correctamente!!",
                             "Éxito",
                             JOptionPane.INFORMATION_MESSAGE);
+                    this.listarLibros.setListaLibrosActual(new ArrayList<>());
                     this.listarLibros.cargarLibros();
 
                     dispose();
@@ -319,6 +321,8 @@ public class FrmRegistrarLibro extends javax.swing.JFrame {
                             "Los datos se han modificado correctamente!!",
                             "Éxito",
                             JOptionPane.INFORMATION_MESSAGE);
+                    
+                    this.listarLibros.setListaLibrosActual(new ArrayList<>());
                     this.listarLibros.cargarLibros();
 
                     dispose();
