@@ -153,7 +153,9 @@ public class CdAudioDAO implements IMediatecaCRUD<CdAudio> {
     public List<CdAudio> listar() throws Exception {
         List<CdAudio> cdAudios = new ArrayList<>();
 
-        String sql = "SELECT codigo_ID, artista, duracion, genero, stock FROM CD_Audio";
+        String sql = "SELECT cd.codigo_ID, m.titulo, cd.artista, cd.duracion, cd.genero, cd.canciones, cd.stock " +
+             "FROM CD_Audio cd " +
+             "JOIN Material m ON cd.codigo_ID = m.codigo_ID";
 
         try (Connection connection = Conexion.obtenerConexion();
              PreparedStatement ps = connection.prepareStatement(sql);
@@ -165,6 +167,7 @@ public class CdAudioDAO implements IMediatecaCRUD<CdAudio> {
                 cdAudio.setArtista(rs.getString("artista"));
                 cdAudio.setDuracion(rs.getTime("duracion").toLocalTime());
                 cdAudio.setGenero(rs.getString("genero"));
+                cdAudio.setCanciones(rs.getInt("canciones"));
                 cdAudio.setStock(rs.getInt("stock"));
 
                 cdAudios.add(cdAudio);
