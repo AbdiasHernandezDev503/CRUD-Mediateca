@@ -4,23 +4,70 @@
  */
 package sv.edu.udb.vistas;
 
-import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
 import sv.edu.udb.entidades.CdAudio;
-
+import java.time.LocalTime;
+import java.util.ArrayList;
+import org.apache.logging.log4j.Logger;
+import sv.edu.udb.dao.CdAudioDAO;
+import sv.edu.udb.util.Log4JUtil;
 /**
  *
  * @author HP
  */
 public class CdAudioForm extends javax.swing.JFrame {
+
     private CdAudio cdAudio;
-    private FrmGestionCdAudio frmGestionCdAudio;
+    private FrmGestionCdAudio listarCdAudio;
+
+    private Logger log = Log4JUtil.getLogger(CdAudioForm.class);
 
     /**
      * Creates new form CdAudioForm
      */
     public CdAudioForm(FrmGestionCdAudio frmGestionCdAudio) {
         initComponents();
-        this.frmGestionCdAudio = frmGestionCdAudio;
+        this.listarCdAudio = frmGestionCdAudio;
+    }
+
+    public boolean validarDatos() {
+        if (txtTitulo.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo Título no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtTitulo.requestFocus();
+            return false;
+        }
+
+        if (txtArtista.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo Artista no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtArtista.requestFocus();
+            return false;
+        }
+
+        if (txtGenero.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo Género no debe estar vacio.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtGenero.requestFocus();
+            return false;
+        }
+
+        if (txtDuracion.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo Duración no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtDuracion.requestFocus();
+            return false;
+        }
+
+        if ((int) txtCanciones.getValue() <= 0) {
+            JOptionPane.showMessageDialog(this, "El número de canciones no puede ser menor que 0.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtCanciones.requestFocus();
+            return false;
+        }
+
+        if ((int) txtStock.getValue() <= 0) {
+            JOptionPane.showMessageDialog(this, "El campo Stock no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+            txtStock.requestFocus();
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -34,12 +81,14 @@ public class CdAudioForm extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         txtTitulo = new javax.swing.JTextField();
+        txtCodigo = new javax.swing.JTextField();
         txtArtista = new javax.swing.JTextField();
         txtGenero = new javax.swing.JTextField();
         txtDuracion = new javax.swing.JTextField();
@@ -56,6 +105,9 @@ public class CdAudioForm extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("Titulo:");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel3.setText("Codigo:");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setText("Artista:");
@@ -114,11 +166,14 @@ public class CdAudioForm extends javax.swing.JFrame {
                                 .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING))
                                     .addComponent(jLabel5))
                                 .addGap(28, 28, 28)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtArtista)
+                                    .addComponent(txtCodigo)
                                     .addComponent(txtGenero)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,7 +200,11 @@ public class CdAudioForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txtArtista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -165,7 +224,7 @@ public class CdAudioForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -176,11 +235,85 @@ public class CdAudioForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        dispose();
+        // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        
+        if (!validarDatos()) {
+            return;
+        }
+        if (btnGuardar.getText().equals("Guardar")) {
+
+            CdAudio cdAudio = new CdAudio();
+
+            cdAudio.setTitulo(this.txtTitulo.getText());
+            cdAudio.setArtista(this.txtArtista.getText());
+            cdAudio.setGenero(this.txtGenero.getText());
+            String duracionTexto = txtDuracion.getText();
+            LocalTime duracion = LocalTime.parse(duracionTexto);
+            cdAudio.setDuracion(duracion);
+            cdAudio.setCanciones((int) this.txtCanciones.getValue());
+            cdAudio.setStock((int) this.txtStock.getValue());
+
+            CdAudioDAO cdAudioDAO = new CdAudioDAO();
+
+            try {
+                int result = cdAudioDAO.crear(cdAudio);
+
+                if (result > 0) {
+                    JOptionPane.showMessageDialog(null,
+                            "Los datos se han ingresado correctamente!!",
+                            "Éxito",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    this.listarCdAudio.setListaCdAudioActual(new ArrayList<>());
+                    this.listarCdAudio.cargarCdAudios();
+
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Ocurrió un error inesperado al guardar los datos",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                log.error("Ocurrió el siguiente error: ", ex.getMessage());
+            }
+        } else if (btnGuardar.getText().equals("Modificar")) {
+            cdAudio.setTitulo(this.txtTitulo.getText());
+            cdAudio.setArtista(this.txtArtista.getText());
+            cdAudio.setGenero(this.txtGenero.getText());
+            String duracionTexto = txtDuracion.getText();
+            LocalTime duracion = LocalTime.parse(duracionTexto);
+            cdAudio.setDuracion(duracion);
+            cdAudio.setCanciones((int) this.txtCanciones.getValue());
+            cdAudio.setStock((int) this.txtStock.getValue());
+
+            CdAudioDAO cdAudioDAO = new CdAudioDAO();
+
+            try {
+                int result = cdAudioDAO.modificar(cdAudio);
+
+                if (result > 0) {
+                    JOptionPane.showMessageDialog(null,
+                            "Los datos se han modificado correctamente!!",
+                            "Éxito",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    this.listarCdAudio.setListaCdAudioActual(new ArrayList<>());
+                    this.listarCdAudio.cargarCdAudios();
+
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Ocurrió un error inesperado al modificar los datos",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                log.error("Ocurrió el siguiente error: ", ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Ocurrió un error al modificar los datos.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**
@@ -220,21 +353,22 @@ public class CdAudioForm extends javax.swing.JFrame {
 
     public void llenarDatosFormulario(CdAudio cdAudio) {
         this.cdAudio = cdAudio;
-         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         txtTitulo.setText(cdAudio.getTitulo());
+        txtCodigo.setText(cdAudio.getCodigo());
         txtArtista.setText(cdAudio.getArtista());
         txtGenero.setText(cdAudio.getGenero());
-        txtDuracion.setText(cdAudio.getDuracion().format(formatter));
+        txtDuracion.setText(LocalTime());
         txtCanciones.setValue(cdAudio.getCanciones());
         txtStock.setValue(cdAudio.getStock());
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnCancelar;
     public javax.swing.JButton btnGuardar;
     public javax.swing.JLabel jLabel1;
     public javax.swing.JLabel jLabel2;
+    public javax.swing.JLabel jLabel3;
     public javax.swing.JLabel jLabel4;
     public javax.swing.JLabel jLabel5;
     public javax.swing.JLabel jLabel6;
@@ -243,9 +377,14 @@ public class CdAudioForm extends javax.swing.JFrame {
     public javax.swing.JLabel lblHeader;
     public javax.swing.JTextField txtArtista;
     public javax.swing.JSpinner txtCanciones;
+    public javax.swing.JTextField txtCodigo;
     public javax.swing.JTextField txtDuracion;
     public javax.swing.JTextField txtGenero;
     public javax.swing.JSpinner txtStock;
     public javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
+
+    private String LocalTime() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
