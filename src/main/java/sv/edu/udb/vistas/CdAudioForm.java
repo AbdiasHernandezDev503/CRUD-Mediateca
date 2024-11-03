@@ -12,12 +12,14 @@ import sv.edu.udb.entidades.CdAudio;
  */
 public class CdAudioForm extends javax.swing.JFrame {
     private CdAudio cdAudio;
+    private FrmGestionCdAudio frmGestionCdAudio;
 
     /**
      * Creates new form CdAudioForm
      */
-    public CdAudioForm() {
+    public CdAudioForm(FrmGestionCdAudio frmGestionCdAudio) {
         initComponents();
+        this.frmGestionCdAudio = frmGestionCdAudio;
     }
 
     /**
@@ -213,7 +215,7 @@ public class CdAudioForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CdAudioForm().setVisible(true);
+                new CdAudioForm(null).setVisible(true);
             }
         });
     }

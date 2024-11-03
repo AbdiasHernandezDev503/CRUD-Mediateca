@@ -34,7 +34,7 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
         bntEliminar.setEnabled(tbCdAudios.getSelectedRow() != -1);
         btnModificar.setEnabled(tbCdAudios.getSelectedRow() != -1);
         setResizable(false);
-       // cargarCdAudios();
+       cargarCdAudios();
     }
     
     public void cargarCdAudios() {
@@ -89,11 +89,11 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
             cdAudioSearch.setArtista(this.txtArtista.getText());
             cdAudioSearch.setGenero(this.txtGenero.getText());
               
-            //listaCdAudioActual = CdAudioDAO.buscar(cdAudioSearch);
+            listaCdAudioActual = CdAudioDAO.buscar(cdAudioSearch);
             
             cargarCdAudios();
-        //} catch (SQLException ex) {
-            //log.error("Ocurrió un error al buscar los CdAudios.", ex);
+        } catch (SQLException ex) {
+            log.error("Ocurrió un error al buscar los CdAudios.", ex);
         }
     }
     
@@ -290,7 +290,7 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
             cdAudioSeleccionado.setCanciones(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 5).toString()));
             cdAudioSeleccionado.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 6).toString()));
             
-            CdAudioForm cdAudioForm = new CdAudioForm();
+            CdAudioForm cdAudioForm = new CdAudioForm(this);
             
             cdAudioForm.setVisible(true);
             cdAudioForm.setTitle("Modificar CdAudio");
@@ -346,7 +346,7 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void bntNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntNuevoActionPerformed
-      CdAudioForm cdAudioForm = new CdAudioForm();
+      CdAudioForm cdAudioForm = new CdAudioForm(this);
         
         cdAudioForm.setVisible(true);
     }//GEN-LAST:event_bntNuevoActionPerformed
