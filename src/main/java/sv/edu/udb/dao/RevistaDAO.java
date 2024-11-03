@@ -216,6 +216,7 @@ public class RevistaDAO implements IMediatecaCRUD<Revista> {
                     resultado.setFechaPublicacion(rs.getDate("fecha_publicacion"));
                     resultado.setStock(rs.getInt("stock"));
 
+
                     revistas.add(resultado);
                 }
             }
