@@ -4,17 +4,22 @@
  */
 package sv.edu.udb.vistas;
 
+import sv.edu.udb.entidades.CdAudio;
+
 /**
  *
  * @author HP
  */
 public class CdAudioForm extends javax.swing.JFrame {
+    private CdAudio cdAudio;
+    private FrmGestionCdAudio frmGestionCdAudio;
 
     /**
      * Creates new form CdAudioForm
      */
-    public CdAudioForm() {
+    public CdAudioForm(FrmGestionCdAudio frmGestionCdAudio) {
         initComponents();
+        this.frmGestionCdAudio = frmGestionCdAudio;
     }
 
     /**
@@ -39,10 +44,11 @@ public class CdAudioForm extends javax.swing.JFrame {
         txtArtista = new javax.swing.JTextField();
         txtGenero = new javax.swing.JTextField();
         txtDuracion = new javax.swing.JTextField();
-        SpinnerStock = new javax.swing.JSpinner();
-        SpinnerCanciones = new javax.swing.JSpinner();
+        txtStock = new javax.swing.JSpinner();
+        txtCanciones = new javax.swing.JSpinner();
         btnGuardar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        lblHeader = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,6 +84,8 @@ public class CdAudioForm extends javax.swing.JFrame {
                 btnCancelarActionPerformed(evt);
             }
         });
+
+        lblHeader.setText("Registrar CdAudio");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,16 +128,22 @@ public class CdAudioForm extends javax.swing.JFrame {
                                     .addComponent(jLabel8))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(SpinnerStock, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(SpinnerCanciones, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCanciones, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(169, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lblHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(186, 186, 186))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
-                .addGap(32, 32, 32)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -152,11 +166,11 @@ public class CdAudioForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(SpinnerCanciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCanciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(SpinnerStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -201,28 +215,45 @@ public class CdAudioForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CdAudioForm().setVisible(true);
+                new CdAudioForm(null).setVisible(true);
             }
         });
     }
 
+    public void llenarDatosFormulario(CdAudio cdAudio) {
+        this.cdAudio = cdAudio;
+
+        txtTitulo.setText(cdAudio.getTitulo());
+        txtCodigo.setText(cdAudio.getCodigo());
+        txtArtista.setText(cdAudio.getArtista());
+        txtGenero.setText(cdAudio.getGenero());
+        txtDuracion.setText(LocalTime());
+        txtCanciones.setValue(cdAudio.getCanciones());
+        txtStock.setValue(cdAudio.getStock());
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSpinner SpinnerCanciones;
-    private javax.swing.JSpinner SpinnerStock;
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JTextField txtArtista;
-    private javax.swing.JTextField txtCodigo;
-    private javax.swing.JTextField txtDuracion;
-    private javax.swing.JTextField txtGenero;
-    private javax.swing.JTextField txtTitulo;
+    public javax.swing.JButton btnCancelar;
+    public javax.swing.JButton btnGuardar;
+    public javax.swing.JLabel jLabel1;
+    public javax.swing.JLabel jLabel2;
+    public javax.swing.JLabel jLabel3;
+    public javax.swing.JLabel jLabel4;
+    public javax.swing.JLabel jLabel5;
+    public javax.swing.JLabel jLabel6;
+    public javax.swing.JLabel jLabel7;
+    public javax.swing.JLabel jLabel8;
+    public javax.swing.JLabel lblHeader;
+    public javax.swing.JTextField txtArtista;
+    public javax.swing.JSpinner txtCanciones;
+    public javax.swing.JTextField txtCodigo;
+    public javax.swing.JTextField txtDuracion;
+    public javax.swing.JTextField txtGenero;
+    public javax.swing.JSpinner txtStock;
+    public javax.swing.JTextField txtTitulo;
     // End of variables declaration//GEN-END:variables
+
+    private String LocalTime() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
