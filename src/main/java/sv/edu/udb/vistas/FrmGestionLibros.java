@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package sv.edu.udb.vistas;
 
 import java.sql.SQLException;
@@ -17,25 +13,21 @@ import sv.edu.udb.dao.LibroDAO;
 import sv.edu.udb.entidades.Libro;
 import sv.edu.udb.util.Log4JUtil;
 
-/**
- *
- * @author Abdias_Hernandez
- */
 public class FrmGestionLibros extends javax.swing.JFrame {
-    
+
     private Logger log = Log4JUtil.getLogger(FrmGestionLibros.class);
     private LibroDAO libroDAO = new LibroDAO();
     private List<Libro> listaLibrosActual = new ArrayList<>();
     private DefaultTableModel modeloTabla = new DefaultTableModel();
-    
+
     public FrmGestionLibros() {
         initComponents();
         btnEliminar.setEnabled(tbLibros.getSelectedRow() != -1);
         btnModificar.setEnabled(tbLibros.getSelectedRow() != -1);
         setResizable(false);
-        cargarLibros(); 
+        cargarLibros();
     }
-    
+
     public void cargarLibros() {
         String[] columnas = {"Código", "Título", "Autor", "Editorial", "ISBN", "Año de Publicación", "Páginas", "Stock"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
@@ -44,7 +36,7 @@ public class FrmGestionLibros extends javax.swing.JFrame {
                 return false;
             }
         };
-        
+
         tbLibros.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -52,16 +44,16 @@ public class FrmGestionLibros extends javax.swing.JFrame {
                 btnModificar.setEnabled(seleccionoFila);
                 btnEliminar.setEnabled(seleccionoFila);
             }
-            
+
         });
-        
+
         modeloTabla.setRowCount(0);
-        
+
         try {
             if (listaLibrosActual.isEmpty()) {
                 listaLibrosActual = libroDAO.listar();
             }
-            
+
             for (Libro libro : listaLibrosActual) {
                 Object[] fila = {
                     libro.getCodigoId(),
@@ -75,14 +67,14 @@ public class FrmGestionLibros extends javax.swing.JFrame {
                 };
                 modeloTabla.addRow(fila);
             }
-            
+
             tbLibros.setModel(modeloTabla);
-            
+
         } catch (Exception ex) {
             log.error("Error inesperado al listar los libros: ", ex);
         }
     }
-    
+
     public void buscarLibros() {
         try {
             Libro libroSearch = new Libro();
@@ -91,15 +83,15 @@ public class FrmGestionLibros extends javax.swing.JFrame {
             libroSearch.setEditorial(this.txtBuscarEditorial.getText());
             libroSearch.setIsbn(this.txtBuscarIsbn.getText());
             libroSearch.setAnioPublicacion((int) this.txtAnioPublicacion.getValue());
-            
+
             listaLibrosActual = libroDAO.buscar(libroSearch);
-            
+
             cargarLibros();
         } catch (SQLException ex) {
             log.error("Ocurrió un error al buscar los libros.", ex);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -377,7 +369,7 @@ public class FrmGestionLibros extends javax.swing.JFrame {
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         FrmRegistrarLibro frmRegistrarLibro = new FrmRegistrarLibro(this);
-        
+
         frmRegistrarLibro.setVisible(true);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
@@ -398,21 +390,21 @@ public class FrmGestionLibros extends javax.swing.JFrame {
             libroSeleccionado.setAnioPublicacion(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 5).toString()));
             libroSeleccionado.setPaginas(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 6).toString()));
             libroSeleccionado.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 7).toString()));
-            
+
             FrmRegistrarLibro frmRegistrarLibro = new FrmRegistrarLibro(this);
-            
+
             frmRegistrarLibro.setVisible(true);
             frmRegistrarLibro.setTitle("Modificar Libro");
             frmRegistrarLibro.lblHeader.setText("Modificar Libro Seleccionado: " + libroSeleccionado.getCodigoId());
             frmRegistrarLibro.btnGuardar.setText("Modificar");
             frmRegistrarLibro.llenarDatosFormulario(libroSeleccionado);
-            
+
         }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         int filaSeleccionada = tbLibros.getSelectedRow();
-        
+
         if (filaSeleccionada != -1) {
             String codigoId = (String) modeloTabla.getValueAt(filaSeleccionada, 0);
 
@@ -422,11 +414,11 @@ public class FrmGestionLibros extends javax.swing.JFrame {
                     "Confirmar Eliminación",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
-            
+
             if (confirmacion == JOptionPane.YES_OPTION) {
                 try {
                     int result = libroDAO.eliminar(codigoId);
-                    
+
                     if (result > 0) {
                         JOptionPane.showMessageDialog(this, "El libro ha sido eliminado exitosamente.");
                         modeloTabla.removeRow(filaSeleccionada);
@@ -449,6 +441,9 @@ public class FrmGestionLibros extends javax.swing.JFrame {
         txtBuscarEditorial.setText("");
         txtBuscarIsbn.setText("");
         txtAnioPublicacion.setValue(0);
+        
+        listaLibrosActual = new ArrayList<>();
+        cargarLibros();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -489,6 +484,15 @@ public class FrmGestionLibros extends javax.swing.JFrame {
             }
         });
     }
+
+    public List<Libro> getListaLibrosActual() {
+        return listaLibrosActual;
+    }
+
+    public void setListaLibrosActual(List<Libro> listaLibrosActual) {
+        this.listaLibrosActual = listaLibrosActual;
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
