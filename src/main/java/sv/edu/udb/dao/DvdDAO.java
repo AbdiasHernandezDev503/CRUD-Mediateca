@@ -176,4 +176,51 @@ public class DvdDAO implements IMediatecaCRUD<Dvd> {
 
         return dvds;
     }
+
+    public List<Dvd> buscar(Dvd dvd) throws SQLException {
+        List<Dvd> dvds = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT d.codigo_ID, m.titulo, d.director, d.genero, d.duracion, d.stock "
+                + "FROM DvD d "
+                + "JOIN Material m ON d.codigo_ID = m.codigo_ID "
+                + "WHERE 1=1");
+
+        List<Object> parametros = new ArrayList<>();
+
+        if (dvd.getTitulo() != null && !dvd.getTitulo().isEmpty()) {
+            sql.append(" AND m.titulo LIKE ?");
+            parametros.add("%" + dvd.getTitulo() + "%");
+        }
+        if (dvd.getDirector() != null && !dvd.getDirector().isEmpty()) {
+            sql.append(" AND d.director LIKE ?");
+            parametros.add("%" + dvd.getDirector() + "%");
+        }
+        if (dvd.getGenero() != null && !dvd.getGenero().isEmpty()) {
+            sql.append(" AND d.genero LIKE ?");
+            parametros.add("%" + dvd.getGenero() + "%");
+        }
+
+        try (Connection connection = Conexion.obtenerConexion(); PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            for (int i = 0; i < parametros.size(); i++) {
+                ps.setObject(i + 1, parametros.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Dvd resultado = new Dvd();
+                    resultado.setCodigoId(rs.getString("codigo_ID"));
+                    resultado.setTitulo(rs.getString("titulo"));
+                    resultado.setDirector(rs.getString("director"));
+                    resultado.setGenero(rs.getString("genero"));
+                    resultado.setDuracion(rs.getTime("duracion").toLocalTime());
+                    resultado.setStock(rs.getInt("stock"));
+
+                    dvds.add(resultado);
+                }
+            }
+        } catch (SQLException e) {
+            log.error("Ocurrió un error inesperado al buscar.", e.getMessage());
+        }
+
+        return dvds;
+    }
 }
