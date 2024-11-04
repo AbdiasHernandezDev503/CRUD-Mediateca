@@ -27,25 +27,24 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
     private CdAudioDAO CdAudioDAO = new CdAudioDAO();
     private List<CdAudio> listaCdAudioActual = new ArrayList<>();
     private DefaultTableModel modeloTabla = new DefaultTableModel();
-    
-    
+
     public FrmGestionCdAudio() {
         initComponents();
         bntEliminar.setEnabled(tbCdAudios.getSelectedRow() != -1);
         btnModificar.setEnabled(tbCdAudios.getSelectedRow() != -1);
         setResizable(false);
-       cargarCdAudios();
+        cargarCdAudios();
     }
-    
+
     public void cargarCdAudios() {
-        String[] columnas = {"Código", "Artista", "Género", "Duración", "Canciones", "Stock"};
+        String[] columnas = {"Código", "Título", "Artista", "Género", "Duración", "Canciones", "Stock"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        
+
         tbCdAudios.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -53,52 +52,56 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
                 btnModificar.setEnabled(seleccionoFila);
                 bntEliminar.setEnabled(seleccionoFila);
             }
-            
         });
-        
-        modeloTabla.setRowCount(0);
-        
+
+        modeloTabla.setRowCount(0); // Limpiar la tabla antes de cargar datos nuevos
+
         try {
-            if (listaCdAudioActual.isEmpty()) {
-                listaCdAudioActual = CdAudioDAO.listar();
+            if (listaCdAudioActual == null || listaCdAudioActual.isEmpty()) {
+                listaCdAudioActual = CdAudioDAO.listar(); // Carga completa desde la base de datos
             }
-            
-            for (CdAudio cdAudio : listaCdAudioActual) {
+
+            for (CdAudio cdAudio : listaCdAudioActual) { // Utiliza listaCdAudioActual como esté (con búsqueda o completo)
                 Object[] fila = {
                     cdAudio.getCodigoId(),
+                    cdAudio.getTitulo(),
                     cdAudio.getArtista(),
                     cdAudio.getGenero(),
                     cdAudio.getDuracion(),
-                    cdAudio.getCanciones(),                             
+                    cdAudio.getCanciones(),
                     cdAudio.getStock()
                 };
                 modeloTabla.addRow(fila);
             }
-            
-            tbCdAudios.setModel(modeloTabla);
-            
+
+            tbCdAudios.setModel(modeloTabla); // Actualiza la tabla con el modelo
+
         } catch (Exception ex) {
             log.error("Error inesperado al listar los CdAudios: ", ex);
         }
     }
     
+    public void limpiarLista() {
+        listaCdAudioActual.clear();
+    }
+
     public void buscarCdAudio() {
         try {
             CdAudio cdAudioSearch = new CdAudio();
             cdAudioSearch.setTitulo(this.txtTitulo.getText());
             cdAudioSearch.setArtista(this.txtArtista.getText());
             cdAudioSearch.setGenero(this.txtGenero.getText());
-              
+
             listaCdAudioActual = CdAudioDAO.buscar(cdAudioSearch);
-            
+
             cargarCdAudios();
         } catch (SQLException ex) {
             log.error("Ocurrió un error al buscar los CdAudios.", ex);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
-    
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -150,8 +153,18 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
         jLabel5.setText("Genero:");
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnLimpiarFiltros.setText("Limpiar filtros");
+        btnLimpiarFiltros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarFiltrosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -217,6 +230,11 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
         });
 
         bntEliminar.setText("Eliminar");
+        bntEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bntEliminarActionPerformed(evt);
+            }
+        });
 
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -282,26 +300,27 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
         if (filaSeleccionada != -1) {
             // Crear un objeto Libro con los datos de la fila seleccionada
             CdAudio cdAudioSeleccionado = new CdAudio();
-            cdAudioSeleccionado.setTitulo((String) modeloTabla.getValueAt(filaSeleccionada, 0));
-            cdAudioSeleccionado.setArtista((String) modeloTabla.getValueAt(filaSeleccionada, 1));
-            cdAudioSeleccionado.setGenero((String) modeloTabla.getValueAt(filaSeleccionada, 2));
-            cdAudioSeleccionado.setDuracion((LocalTime) modeloTabla.getValueAt(filaSeleccionada, 3));
-            cdAudioSeleccionado.setCanciones(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 4).toString()));
-            cdAudioSeleccionado.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 5).toString()));
-            
+            cdAudioSeleccionado.setCodigoId((String) modeloTabla.getValueAt(filaSeleccionada, 0));
+            cdAudioSeleccionado.setTitulo((String) modeloTabla.getValueAt(filaSeleccionada, 1));
+            cdAudioSeleccionado.setArtista((String) modeloTabla.getValueAt(filaSeleccionada, 2));
+            cdAudioSeleccionado.setGenero((String) modeloTabla.getValueAt(filaSeleccionada, 3));
+            cdAudioSeleccionado.setDuracion((LocalTime) modeloTabla.getValueAt(filaSeleccionada, 4));
+            cdAudioSeleccionado.setCanciones(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 5).toString()));
+            cdAudioSeleccionado.setStock(Integer.parseInt(modeloTabla.getValueAt(filaSeleccionada, 6).toString()));
+
             CdAudioForm cdAudioForm = new CdAudioForm(this);
-            
+
             cdAudioForm.setVisible(true);
             cdAudioForm.setTitle("Modificar CdAudio");
             cdAudioForm.lblHeader.setText("Modificar CdAudio Seleccionado: " + cdAudioSeleccionado.getCodigoId());
             cdAudioForm.btnGuardar.setText("Modificar");
-            cdAudioForm.llenarDatosFormulario(cdAudioSeleccionado);     
-    }                                            
+            cdAudioForm.llenarDatosFormulario(cdAudioSeleccionado);
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {
         int filaSeleccionada = tbCdAudios.getSelectedRow();
-        
+
         if (filaSeleccionada != -1) {
             String codigoId = (String) modeloTabla.getValueAt(filaSeleccionada, 0);
 
@@ -311,11 +330,11 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
                     "Confirmar Eliminación",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
-            
+
             if (confirmacion == JOptionPane.YES_OPTION) {
                 try {
                     int result = CdAudioDAO.eliminar(codigoId);
-                    
+
                     if (result > 0) {
                         JOptionPane.showMessageDialog(this, "El CdAudio ha sido eliminado exitosamente.");
                         modeloTabla.removeRow(filaSeleccionada);
@@ -330,25 +349,63 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un CdAudio para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
-    }      
-    
-    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        txtTitulo.setText("");
-        txtArtista.setText("");
-        txtGenero.setText("");     
     }
-    
-    
-    
+
+
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-       dispose();
+        dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void bntNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntNuevoActionPerformed
-      CdAudioForm cdAudioForm = new CdAudioForm(this);
-        
+        CdAudioForm cdAudioForm = new CdAudioForm(this);
+
         cdAudioForm.setVisible(true);
     }//GEN-LAST:event_bntNuevoActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        this.buscarCdAudio();
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnLimpiarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarFiltrosActionPerformed
+        txtArtista.setText("");
+        txtTitulo.setText("");
+        txtGenero.setText("");
+
+        listaCdAudioActual = new ArrayList<>();
+        cargarCdAudios();
+    }//GEN-LAST:event_btnLimpiarFiltrosActionPerformed
+
+    private void bntEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntEliminarActionPerformed
+        int filaSeleccionada = tbCdAudios.getSelectedRow();
+
+        if (filaSeleccionada != -1) {
+            String codigoId = (String) modeloTabla.getValueAt(filaSeleccionada, 0);
+
+            int confirmacion = JOptionPane.showConfirmDialog(this,
+                    "¿Estás seguro de que deseas eliminar este CD Audio?",
+                    "Confirmar Eliminación",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                try {
+                    int result = CdAudioDAO.eliminar(codigoId);
+
+                    if (result > 0) {
+                        JOptionPane.showMessageDialog(this, "El CD Audio ha sido eliminado exitosamente.");
+                        modeloTabla.removeRow(filaSeleccionada);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error al eliminar el CD Audio. Intente nuevamente.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    log.error("Ocurrio un error al eliminar el registro: ", ex.getMessage());
+                    JOptionPane.showMessageDialog(this, "Ocurrió un error al intentar eliminar el registro.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione un registro para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_bntEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -384,7 +441,7 @@ public class FrmGestionCdAudio extends javax.swing.JFrame {
             }
         });
     }
-   
+
     public List<CdAudio> getListaCdAudiosActual() {
         return listaCdAudioActual;
     }

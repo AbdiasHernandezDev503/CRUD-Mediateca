@@ -164,6 +164,7 @@ public class CdAudioDAO implements IMediatecaCRUD<CdAudio> {
             while (rs.next()) {
                 CdAudio cdAudio = new CdAudio();
                 cdAudio.setCodigoId(rs.getString("codigo_ID"));
+                cdAudio.setTitulo(rs.getString("titulo"));
                 cdAudio.setArtista(rs.getString("artista"));
                 cdAudio.setDuracion(rs.getTime("duracion").toLocalTime());
                 cdAudio.setGenero(rs.getString("genero"));
@@ -180,9 +181,9 @@ public class CdAudioDAO implements IMediatecaCRUD<CdAudio> {
     }
     public List<CdAudio> buscar(CdAudio cdAudio) throws SQLException {
         List<CdAudio> cdAudios = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT c.codigo_ID, m.titulo, c.artista, c.genero, c.duracion, c.canciones, c.stock "
-                + "FROM CD_Audio c "
-                + "JOIN Material m ON c.codigo_ID = m.codigo_ID "
+        StringBuilder sql = new StringBuilder("SELECT cd.codigo_ID, m.titulo, cd.artista, cd.genero, cd.duracion, cd.canciones, cd.stock "
+                + "FROM CD_Audio cd "
+                + "JOIN Material m ON cd.codigo_ID = m.codigo_ID "
                 + "WHERE 1=1");
 
         List<Object> parametros = new ArrayList<>();
@@ -192,11 +193,11 @@ public class CdAudioDAO implements IMediatecaCRUD<CdAudio> {
             parametros.add("%" + cdAudio.getTitulo() + "%");
         }
         if (cdAudio.getArtista() != null && !cdAudio.getArtista().isEmpty()) {
-            sql.append(" AND c.artista LIKE ?");
+            sql.append(" AND cd.artista LIKE ?");
             parametros.add("%" + cdAudio.getArtista() + "%");
         }
         if (cdAudio.getGenero() != null && !cdAudio.getGenero().isEmpty()) {
-            sql.append(" AND c.genero LIKE ?");
+            sql.append(" AND cd.genero LIKE ?");
             parametros.add("%" + cdAudio.getGenero() + "%");
         }
 
@@ -220,7 +221,7 @@ public class CdAudioDAO implements IMediatecaCRUD<CdAudio> {
                 }
             }
         } catch (SQLException e) {
-            log.error("Ocurrió un error inesperado al buscar.", e.getMessage());
+            log.error("Ocurrió un error inesperado al buscar.", e);
         }
 
         return cdAudios;

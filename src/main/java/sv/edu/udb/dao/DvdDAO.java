@@ -216,7 +216,7 @@ public class DvdDAO implements IMediatecaCRUD<Dvd> {
                 }
             }
         } catch (SQLException e) {
-            log.error("Ocurrió un error inesperado al buscar.", e.getMessage());
+            log.error("Ocurrió un error inesperado al buscar.", e);
         }
 
         return dvds;

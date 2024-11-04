@@ -177,7 +177,7 @@ public class MenuPrincipalFrom extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDvdActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        dispose();
+        System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
 
     /**

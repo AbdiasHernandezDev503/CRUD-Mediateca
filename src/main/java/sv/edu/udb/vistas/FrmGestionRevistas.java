@@ -305,7 +305,7 @@ public class FrmGestionRevistas extends javax.swing.JFrame {
 
             revistaForm.setVisible(true);
             revistaForm.setTitle("Modificar Libro");
-            revistaForm.lblHeader.setText("Modificar Libro Seleccionado: " + revistaSeleccionada.getCodigoId());
+            revistaForm.lblHeader.setText("Modificar Revista Seleccionada: " + revistaSeleccionada.getCodigoId());
             revistaForm.btnGuardar.setText("Modificar");
             revistaForm.llenarDatosFormulario(revistaSeleccionada);
 
